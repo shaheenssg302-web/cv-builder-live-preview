@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>my cv</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+    
+<style>
+body {
+  background: linear-gradient(135deg, #000000, #1a1a1a);
+  color: #f5f5f5;
+}
+
+h2 {
+  color: gold;
+  font-weight: bold;
+}
+
+.card {
+  background: #111;
+  border: 1px solid gold;
+  box-shadow: 0 0 15px rgba(255,215,0,0.2);
+  border-radius: 12px;
+}
+
+.cv-preview {
+  background: #0d0d0d;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid gold;
+  box-shadow: 0 0 20px rgba(255,215,0,0.25);
+}
+
+input, .form-control {
+  background: #000;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+input::placeholder {
+  color: #aaa;
+}
+
+input:focus {
+  border-color: gold;
+  box-shadow: 0 0 5px gold;
+}
+
+button {
+  border-radius: 8px !important;
+}
+
+.btn-primary {
+  background: gold;
+  border: none;
+  color: black;
+  font-weight: bold;
+}
+
+.btn-primary:hover {
+  background: #e6c200;
+}
+
+.btn-success {
+  background: black;
+  border: 1px solid gold;
+  color: gold;
+  font-weight: bold;
+}
+
+.btn-success:hover {
+  background: gold;
+  color: black;
+}
+
+h5 {
+  color: gold;
+  margin-top: 10px;
+}
+
+.progress {
+  height: 8px;
+  background: #222;
+}
+
+.progress-bar {
+  background: gold;
+}
+
+#cvSection h3 {
+  color: gold;
+}
+
+#cvSection a {
+  color: gold;
+  text-decoration: none;
+}
+
+#cvSection a:hover {
+  text-decoration: underline;
+}
+
+@media print {
+  body * { visibility:hidden; }
+  #cvSection, #cvSection * { visibility:visible; }
+  #cvSection {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    background:white;
+    color:black;
+    border:none;
+    box-shadow:none;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="container py-4">
+  <h2 class="text-center mb-4">Dynamic CV Builder</h2>
+  <div class="row">
+
+    <!-- FORM -->
+    <div class="col-md-6">
+      <div class="card p-3 mb-3">
+
+        <h5>Personal Info</h5>
+        <input class="form-control mb-2" placeholder="Name" id="name">
+        <input class="form-control mb-2" placeholder="Email" id="email">
+        <input class="form-control mb-2" placeholder="Phone" id="phone">
+        <input class="form-control mb-2" placeholder="Address" id="address">
+        <input type="file" class="form-control mb-3" id="image">
+
+        <h5>Education</h5>
+        <div id="education"></div>
+        <button class="btn btn-sm btn-primary mb-3" onclick="addEducation()">Add Education</button>
+
+        <h5>Experience</h5>
+        <div id="experience"></div>
+        <button class="btn btn-sm btn-primary mb-3" onclick="addExperience()">Add Experience</button>
+
+        <h5>Skills</h5>
+        <div id="skills"></div>
+        <button class="btn btn-sm btn-primary mb-3" onclick="addSkill()">Add Skill</button>
+
+        <h5>Projects</h5>
+        <div id="projects"></div>
+        <button class="btn btn-sm btn-primary mb-3" onclick="addProject()">Add Project</button>
+
+        <button class="btn btn-success w-100" onclick="window.print()">Download CV</button>
+      </div>
+    </div>
+
+    <!-- CV PREVIEW -->
+    <div class="col-md-6">
+      <div id="cvSection" class="cv-preview">
+        <h3 id="cvName"></h3>
+        <p id="cvEmail"></p>
+        <p id="cvPhone"></p>
+        <p id="cvAddress"></p>
+        <img id="cvImage" width="100" class="mb-3"/>
+
+        <h5>Education</h5>
+        <div id="cvEducation"></div>
+
+        <h5>Experience</h5>
+        <div id="cvExperience"></div>
+
+        <h5>Skills</h5>
+        <div id="cvSkills"></div>
+
+        <h5>Projects</h5>
+        <div id="cvProjects"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// LIVE UPDATE
+['name','email','phone','address'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',()=>{
+    document.getElementById('cv'+id.charAt(0).toUpperCase()+id.slice(1)).innerText = document.getElementById(id).value;
+  });
+});
+
+// IMAGE
+image.onchange = e => {
+  const reader = new FileReader();
+  reader.onload = ()=> cvImage.src = reader.result;
+  reader.readAsDataURL(e.target.files[0]);
+};
+
+// EDUCATION
+function addEducation(val=''){
+  let div = document.createElement('div');
+  div.innerHTML = `<input class="form-control mb-2 edu" placeholder="Degree" value="${val}">`;
+  education.appendChild(div);
+  div.querySelector('input').oninput = updateEducation;
+  updateEducation();
+}
+function updateEducation(){
+  cvEducation.innerHTML = '';
+  document.querySelectorAll('.edu').forEach(e=>{
+    cvEducation.innerHTML += `<p>${e.value}</p>`;
+  });
+}
+
+// EXPERIENCE
+function addExperience(val=''){
+  let div = document.createElement('div');
+  div.innerHTML = `<input class="form-control mb-2 exp" placeholder="Job" value="${val}">`;
+  experience.appendChild(div);
+  div.querySelector('input').oninput = updateExperience;
+  updateExperience();
+}
+function updateExperience(){
+  cvExperience.innerHTML = '';
+  document.querySelectorAll('.exp').forEach(e=>{
+    cvExperience.innerHTML += `<p>${e.value}</p>`;
+  });
+}
+
+// SKILLS
+function addSkill(skillVal='', levelVal=50){
+  let div = document.createElement('div');
+  div.innerHTML = `
+    <input class="form-control mb-1 skill" placeholder="Skill" value="${skillVal}">
+    <input type="range" min="0" max="100" class="form-range level" value="${levelVal}">
+  `;
+  skills.appendChild(div);
+  div.querySelectorAll('input').forEach(i=> i.oninput = updateSkills);
+  updateSkills();
+}
+function updateSkills(){
+  cvSkills.innerHTML='';
+  document.querySelectorAll('#skills > div').forEach(div=>{
+    let skill = div.querySelector('.skill').value;
+    let level = div.querySelector('.level').value;
+    cvSkills.innerHTML += `
+      <p>${skill}</p>
+      <div class="progress mb-2"><div class="progress-bar" style="width:${level}%"></div></div>
+    `;
+  });
+}
+
+// PROJECTS
+function addProject(t='',d='',l=''){
+  let div = document.createElement('div');
+  div.innerHTML = `
+    <input class="form-control mb-1 title" placeholder="Title" value="${t}">
+    <input class="form-control mb-1 desc" placeholder="Description" value="${d}">
+    <input class="form-control mb-2 link" placeholder="Link" value="${l}">
+  `;
+  projects.appendChild(div);
+  div.querySelectorAll('input').forEach(i=> i.oninput = updateProjects);
+  updateProjects();
+}
+function updateProjects(){
+  cvProjects.innerHTML='';
+  document.querySelectorAll('#projects > div').forEach(div=>{
+    let t = div.querySelector('.title').value;
+    let d = div.querySelector('.desc').value;
+    let l = div.querySelector('.link').value;
+    cvProjects.innerHTML += `<div><b>${t}</b><p>${d}</p><a href="${l}">${l}</a></div>`;
+  });
+}
+
+function updateAll(){
+  updateEducation();
+  updateExperience();
+  updateSkills();
+  updateProjects();
+  cvName.innerText = name.value;
+  cvEmail.innerText = email.value;
+  cvPhone.innerText = phone.value;
+  cvAddress.innerText = address.value;
+}
+</script>
+</body>
+</html>
